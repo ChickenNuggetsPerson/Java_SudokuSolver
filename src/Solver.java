@@ -211,12 +211,9 @@ public class Solver {
         return possibleVals;
     }
 
-    PercentageDisplay bar;
-
     private boolean recursiveSolve(boolean showSolving, int delayMS) {
         // Get Empty Positions
         List<BoardPos> emptyPoses = tempBoard.getEmptySpots();
-        bar.setNewVal(emptyPoses.size());
 
         // Create a list of square objects from the empty postions
         List<Square> squares = new ArrayList<>(); 
@@ -288,8 +285,7 @@ public class Solver {
         System.out.println("");
 
         tempBoard.printBoard();
-    
-        bar = new PercentageDisplay("Percent Complete", 0, 81, 0, 50);
+
         // Main recursive solving logic
         recursiveSolve(showSolving, delayMS);
 

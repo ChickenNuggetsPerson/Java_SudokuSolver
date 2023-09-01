@@ -8,6 +8,8 @@ public class PercentageDisplay {
 
     private int charLength;
 
+    private int count;
+
     public PercentageDisplay(String DisplayText, double minNumber, double maxNumber, double startValue, int width) {
         this.min = minNumber;
         this.max = maxNumber;
@@ -35,13 +37,14 @@ public class PercentageDisplay {
                 pString += " ";
             }
         }
-        pString += "] " + Math.floor(currentPercent * 1000) / 10 + "%\r";
+        pString += "] " + Math.floor(currentPercent * 100) / 100 + "% " + count;
 
-        System.out.print(pString);
+        System.out.println(pString);
     }
     
     public void setNewVal(double newVal) {
         if (!initialized) { return; }
+        count++;
         this.val = newVal;
         this.print();
     }

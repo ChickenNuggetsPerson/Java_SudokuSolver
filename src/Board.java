@@ -81,7 +81,7 @@ public class Board {
             String currentLine = "";
             for (int x = 0; x < 9; x++) {
                 if (this.getNum(new BoardPos(x, y)) == 0) {
-                    currentLine += (" _");
+                    currentLine += (" -");
                 } else {
                     currentLine += (" " + this.getNum(new BoardPos(x, y)));
                 }
@@ -97,13 +97,13 @@ public class Board {
             for (int x = 0; x < 9; x++) {
                 if (this.getNum(new BoardPos(x, y)) == b.getNum(new BoardPos(x, y))) {
                     if (this.getNum(new BoardPos(x, y)) == 0) {
-                        currentLine += (" _");
+                        currentLine += (" -");
                     } else {
                         currentLine += (" " + this.getNum(new BoardPos(x, y)));
                     }
 
                 } else if (this.getNum(new BoardPos(x, y)) == 0) {
-                    currentLine += (" " + SET_BOLD_TEXT + "_" + SET_PLAIN_TEXT);
+                    currentLine += (" " + SET_BOLD_TEXT + "-" + SET_PLAIN_TEXT);
                 } else {
                         currentLine += (" " + SET_BOLD_TEXT + this.getNum(new BoardPos(x, y)) + SET_PLAIN_TEXT);
                 }
