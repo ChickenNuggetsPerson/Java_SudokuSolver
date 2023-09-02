@@ -1,5 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -49,6 +53,30 @@ public class Board {
         }
     }
 
+    public void saveBoardToFile(String fileName) {
+        System.out.println("Saving Board to: " + fileName);
+        try {
+            // Generate the CSV String
+            String writeString = "";
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < 9; x++) {
+                    writeString += storage[x][y];
+                    if (x == 8) { continue; }
+                    writeString += ",";
+                }
+                writeString += "\n";
+            }
+
+            // Save the string to a file
+            FileWriter wr = new FileWriter(fileName);
+            wr.write(writeString);
+            wr.flush();
+            wr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
+
     public int getNum(BoardPos pos) {
         return storage[pos.x][pos.y];
     }
@@ -77,18 +105,19 @@ public class Board {
 
     public void printBoard() {
         System.out.println("");
+        String printText = "";
         for (int y = 0; y < 9; y++) {
-            String currentLine = "";
             for (int x = 0; x < 9; x++) {
                 if (this.getNum(new BoardPos(x, y)) == 0) {
-                    currentLine += (" -");
+                    printText += (" -");
                 } else {
-                    currentLine += (" " + this.getNum(new BoardPos(x, y)));
+                    printText += (" " + this.getNum(new BoardPos(x, y)));
                 }
                 
             }
-            System.out.println(currentLine);
+            printText += "\n";
         }
+        System.out.println(printText);
     }
     public void printBoard(Board b) {
         System.out.println("");

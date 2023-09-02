@@ -211,7 +211,7 @@ public class Solver {
         return possibleVals;
     }
 
-    private boolean recursiveSolve(boolean showSolving, int delayMS) {
+    private boolean recursiveSolve(boolean showSolving, int delayMS, boolean solveAll) {
         // Get Empty Positions
         List<BoardPos> emptyPoses = tempBoard.getEmptySpots();
 
@@ -234,8 +234,22 @@ public class Solver {
             runningLength = squares.get(i).possibleVals.size();
             runningIndex = i;
         }
+        // If there are empty spots but no availabe spaces then return false
+        if (runningIndex == -1 && !emptyPoses.isEmpty()) {
+            return false;
+        }
+
+
         // If there are no avaialbe numbers, return true
-        if (runningIndex == -1) { return true; }
+        if (runningIndex == -1) { 
+            if (solveAll) {
+                Board b = new Board();
+                b.loadFromOtherBoard(tempBoard);
+                allAnswers.add(b);
+                return false;
+            }   
+            return true; 
+        }
 
         // Loop through possible numbers, and loop further down the recursion loop
         // If the baord fails later on, it will go back and try other solutions
@@ -246,10 +260,7 @@ public class Solver {
 
             // Show the solving steps if the user wants it
             if (showSolving) {
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println();
+                System.out.println("\n\n\n\n");
                 tempBoard.printBoard();
                 try {
                     Thread.sleep(delayMS, 0);
@@ -259,10 +270,16 @@ public class Solver {
             }
             
             // Loop further down the tree
-            boolean result = recursiveSolve(showSolving, delayMS);
+            boolean result = recursiveSolve(showSolving, delayMS, solveAll);
             // If the further down loop finished without errors and the board is valid, return true
             // Otherwise undo the change and try the next possible number
             if (result && validateBoard(tempBoard, true)) {
+                if (solveAll) {
+                    Board b = new Board();
+                    b.loadFromOtherBoard(tempBoard);
+                    allAnswers.add(b);
+                    return false;
+                }   
                 return true;
             } else {
                 tempBoard.undoChange(change);
@@ -273,30 +290,59 @@ public class Solver {
         return false;
     }
 
-    public boolean solve() {
+    public Board solve() {
         return solve(false, 0);
     }
-    public boolean solve(boolean showSolving, int delayMS) {
+    public Board solve(boolean showSolving, int delayMS) {
         
         // Validate the board
         System.out.println("");
-        if (!validateBoard(storeBoard, false)) { System.out.println("Board Is Not Valid"); return false; }
+        if (!validateBoard(storeBoard, false)) { System.out.println("Board Is Not Valid"); return new Board(); }
         System.out.println("Board Is Valid");
         System.out.println("");
 
         tempBoard.printBoard();
 
         // Main recursive solving logic
-        recursiveSolve(showSolving, delayMS);
+        recursiveSolve(showSolving, delayMS, false);
 
         // Double check the board to make sure it is valid
-        if (!validateBoard(tempBoard, true)) { System.out.println("Could not find answer"); return false; }
+        if (!validateBoard(tempBoard, true)) { System.out.println("Could not find answer"); return new Board(); }
 
         System.out.println("");
         System.out.println("Done Solving");
 
         tempBoard.printBoard(storeBoard);
 
-        return true;
+        return tempBoard;
+    }
+
+
+    List<Board> allAnswers = new ArrayList<>();
+    public List<Board> solveForAll() {
+        return solveForAll(false, 0);
+    }
+    public List<Board> solveForAll(boolean showSolving, int delayMS) {
+        
+        // Validate the board
+        System.out.println("");
+        if (!validateBoard(storeBoard, false)) { System.out.println("Board Is Not Valid"); return allAnswers; }
+        System.out.println("Board Is Valid");
+        System.out.println("");
+
+        tempBoard.printBoard();
+
+        // Main recursive solving logic
+        recursiveSolve(showSolving, delayMS, true);
+
+        // Double check the board to make sure it is valid
+        if (!validateBoard(tempBoard, true)) { System.out.println("Could not find answer"); return allAnswers; }
+
+        System.out.println("");
+        System.out.println("Done Solving");
+
+        tempBoard.printBoard(storeBoard);
+
+        return allAnswers;
     }
 }
