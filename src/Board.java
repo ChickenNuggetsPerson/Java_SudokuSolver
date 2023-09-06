@@ -77,6 +77,35 @@ public class Board {
         } 
     }
 
+    private int randomIntFromRange(int min, int max) {
+        return (int)Math.floor(Math.random() * (double)(max - min)) + min;
+    }
+    public void randomize(int randomSquares) {
+        // Clear the board
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                setNum(new BoardPos(x, y), 0);
+            }
+        }
+        
+        for (int i = 0; i < randomSquares; i++) {
+            setNum(new BoardPos(randomIntFromRange(0, 8), randomIntFromRange(0, 8)), randomIntFromRange(1, 9));
+        }
+
+    }
+
+    public int getZerosLeft() {
+        int total = 0;
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (getNum(new BoardPos(x, y)) == 0) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+
     public int getNum(BoardPos pos) {
         return storage[pos.x][pos.y];
     }

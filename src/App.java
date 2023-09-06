@@ -7,6 +7,17 @@ public class App {
         ArgsParser parser = new ArgsParser();
         parser.parse(args);
 
+
+        if (parser.getArgument("generate") != null) {
+
+            Generator generator = new Generator();
+            generator.setConfig(Integer.parseInt(parser.getArgument("generate")), parser.getArgument("file"));
+            generator.generateBoard();
+            
+            System.exit(0);
+        }
+
+
         // Check for the file input parameter
         if (parser.getArgument("file") == null) { printUsage(); System.exit(0); }
 
@@ -22,7 +33,7 @@ public class App {
             if (parser.getArgument("show") == null) {
                 b = solver.solve();
             } else {
-                b = solver.solve(true, Integer.parseInt(parser.getArgument("show")));
+                b = solver.solve(true, Integer.parseInt(parser.getArgument("show")), true, 100000);
             }
 
             if (parser.getArgument("save") != null) {
@@ -34,7 +45,7 @@ public class App {
             if (parser.getArgument("show") == null) {
                 boards = solver.solveForAll();
             } else {
-                boards = solver.solveForAll(true, Integer.parseInt(parser.getArgument("show")));
+                boards = solver.solveForAll(true, Integer.parseInt(parser.getArgument("show")), true, 1000000);
             }
 
             System.out.println("");
@@ -58,7 +69,7 @@ public class App {
         printString += newLine;
         printString += "Sudoku Solver" + newLine;
         printString += "-------------" + newLine;
-        printString += "Usage: " + newLine;
+        printString += "Solving: " + newLine;
         printString += newLine;
 
         printString += "- Required -" + newLine;
@@ -77,6 +88,22 @@ public class App {
 
         printString += "-show [updateTime]" + newLine;
         printString += "Show the solving process with the update time interval in ms" + newLine;
+        printString += newLine;
+
+        printString += "-------------" + newLine;
+        printString += "Generating: " + newLine;
+        printString += newLine;
+
+        printString += "-generate [difficulty]" + newLine;
+        printString += "Generate a Board with the given difficulty from the range 1-10" + newLine;
+        printString += newLine;        
+
+        printString += "-file [fileName]" + newLine;
+        printString += "Output the baord to the given csv file" + newLine;
+        printString += newLine;
+
+        printString += "-show [updateTime]" + newLine;
+        printString += "Show the generating process with the update time interval in ms" + newLine;
         printString += newLine;
 
         System.out.println(printString);
